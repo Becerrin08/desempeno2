@@ -1,0 +1,58 @@
+<div class="feed-container">
+  <!-- Formulario para crear / editar -->
+  <div class="card post-form">
+    <h3>{{ editandoId ? 'Editar publicación' : '¿Qué estás pensando?' }}</h3>
+    
+    <form (ngSubmit)="guardarPost()">
+      <input 
+        type="text" 
+        name="title" 
+        [(ngModel)]="nuevoPost.title" 
+        placeholder="Título de tu publicación..." 
+        required 
+      />
+      
+      <textarea 
+        name="body" 
+        rows="3" 
+        [(ngModel)]="nuevoPost.body" 
+        placeholder="Escribe el contenido aquí..." 
+        required
+      ></textarea>
+      
+      <div class="form-actions">
+        <button type="submit" class="btn-primary">
+          {{ editandoId ? 'Guardar cambios' : 'Publicar' }}
+        </button>
+        
+        @if (editandoId) {
+          <button type="button" class="btn-secondary" (click)="cancelarEdicion()">
+            Cancelar
+          </button>
+        }
+      </div>
+    </form>
+  </div>
+
+  <!-- Listado de publicaciones -->
+  @if (cargando) {
+    <p class="loading">Cargando publicaciones...</p>
+  }
+
+  <div class="posts-list">
+    @for (post of posts; track post.id) {
+      <div class="card post-item">
+        <div class="post-header">
+          <span class="user-badge">Usuario #{{ post.userId }}</span>
+          <div class="post-actions">
+            <button class="btn-edit" (click)="seleccionarParaEditar(post)">Editar</button>
+            <button class="btn-delete" (click)="eliminarPost(post.id!)">Eliminar</button>
+          </div>
+        </div>
+        
+        <h4>{{ post.title }}</h4>
+        <p>{{ post.body }}</p>
+      </div>
+    }
+  </div>
+</div>
